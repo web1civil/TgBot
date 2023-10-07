@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\shinobi\\Desktop\\TGBot\\TelegramBot1\\TelegramBot1\\TelegramBot1.csproj": {}
+    "C:\\Users\\shinobi\\Desktop\\git\\TgBot\\TelegramBot1\\TelegramBot1.csproj": {}
   },
   "projects": {
-    "C:\\Users\\shinobi\\Desktop\\TGBot\\TelegramBot1\\TelegramBot1\\TelegramBot1.csproj": {
+    "C:\\Users\\shinobi\\Desktop\\git\\TgBot\\TelegramBot1\\TelegramBot1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\shinobi\\Desktop\\TGBot\\TelegramBot1\\TelegramBot1\\TelegramBot1.csproj",
+        "projectUniqueName": "C:\\Users\\shinobi\\Desktop\\git\\TgBot\\TelegramBot1\\TelegramBot1.csproj",
         "projectName": "TelegramBot1",
-        "projectPath": "C:\\Users\\shinobi\\Desktop\\TGBot\\TelegramBot1\\TelegramBot1\\TelegramBot1.csproj",
+        "projectPath": "C:\\Users\\shinobi\\Desktop\\git\\TgBot\\TelegramBot1\\TelegramBot1.csproj",
         "packagesPath": "C:\\Users\\shinobi\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\shinobi\\Desktop\\TGBot\\TelegramBot1\\TelegramBot1\\obj\\",
+        "outputPath": "C:\\Users\\shinobi\\Desktop\\git\\TgBot\\TelegramBot1\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\shinobi\\AppData\\Roaming\\NuGet\\NuGet.Config",

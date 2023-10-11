@@ -12,6 +12,21 @@ namespace CETmsgr.dbutils
 {
     internal class DataBaseMethods
 {
-    // метод для создания сообщения водителем. данные методы мне кажутся излишними, но я решил их оставить тк все работает
-   
-     }}
+        // метод для проверки есть ли в базе данных юзер с таким же айди и если нету то создает нового с этим айди
+        public static async Task FindOrAddUser(int id)
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                var user = db.Users.Where(u => u.TgChatId == id).FirstOrDefault(); 
+
+                if (user == null)
+                {
+                    user = new User { TgChatId = id };
+                    db.Users.Add(user);
+                    db.SaveChanges();
+                }
+            
+            }
+        }
+    }
+}

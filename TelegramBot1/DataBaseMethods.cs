@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-using Telegram.Bot;
-using Telegram.Bot.Types;
+
 
 namespace CETmsgr.dbutils
 {
@@ -25,7 +20,40 @@ namespace CETmsgr.dbutils
                     db.Users.Add(user);
                     db.SaveChanges();
                 }
-            
+            }
+        }
+        public static Note GetNoteByTgChatId(int Id)
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                    var notes = db.Notes.Where(n => n.OwnerId == Id).ToList();
+
+                    if (notes.Count == 0)
+                    {
+                        return null;
+                    }
+
+                    return notes.FirstOrDefault(n => n.StageCreate >= 1);
+                
+            }
+        }
+        public static async Task CreateEmptyNewNote(int Id)
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                Note NewNote1 = new Note{OwnerId = Id, StageCreate = 1};
+                db.Notes.Add(NewNote1);
+                db.SaveChanges();
+            }
+        }
+        public static async Task AddTextToNewNote(int Id,string NoteText)
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                var Note = db.Notes.FirstOrDefault(n => n.Id == Id);
+                Note.Text = NoteText;
+                db.Notes.Update(Note);
+                db.SaveChanges();
             }
         }
     }

@@ -1,17 +1,12 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types.ReplyMarkups;
 using Telegram.Bot.Polling;
-using Microsoft.EntityFrameworkCore;
 using CETmsgr.dbutils;
 using Update = Telegram.Bot.Types.Update;
-using Telegram.Bot.Types.Enums;
 namespace CETmsgr
 {
-
-
     class Program
     {
         static ITelegramBotClient bot = new TelegramBotClient("6609199550:AAGPenZ66Tkrp7ZSBEqCicZsVWQYPZpOtdc");
@@ -20,41 +15,18 @@ namespace CETmsgr
             if (update.Type == UpdateType.CallbackQuery)
             {
                 var callbackQuery = update.CallbackQuery;
-                int ChadId = (int)Convert.ToInt64(update.CallbackQuery.Message.Chat.Id);
-                await DataBaseMethods.FindOrAddUser(ChadId);
-                if (callbackQuery.Data == "41")
-                {
-                    using (ApplicationContext db = new ApplicationContext())
-                    {
-                        var users = (from user in db.Users.Include(p => p.Id)
-                                     where user.Id == ChadId
-                                     select user);
-
-                        var users1 = db.Users.ToList();
-                        Console.WriteLine("Данные после добавления:");
-                        foreach (User u in users)
-                        {
-                            await botClient.SendTextMessageAsync(
-            chatId: callbackQuery.Message.Chat.Id,
-            text: $"{u.Id}");
-
-                        }
-
-
-
-                    }
-                }
+                int сhadId = (int)Convert.ToInt64(update.CallbackQuery.Message.Chat.Id);
+                await DataBaseMethods.FindOrAddUser(сhadId);
                 if (callbackQuery.Data == "4121")
                 {
                     using (ApplicationContext db = new ApplicationContext())
                     {
-                        DataBaseMethods.CreateEmptyNewNote(ChadId);
+                        DataBaseMethods.CreateEmptyNewNote(сhadId);
                         await botClient.SendTextMessageAsync(
-          chatId: callbackQuery.Message.Chat.Id,
-          text: "Введите текст заметки");
+                        chatId: callbackQuery.Message.Chat.Id,
+                        text: "Введите текст заметки");
                     }
                 }
-
                 if (callbackQuery.Data == "13")
                 {
                     var stic = await botClient.SendStickerAsync(
@@ -64,17 +36,14 @@ namespace CETmsgr
                 }
                 if (callbackQuery.Data == "21")
                 {
-                    await botClient.SendTextMessageAsync(
-             chatId: callbackQuery.Message.Chat.Id,
-             text: "Заходит улитка в бар");
+                     await botClient.SendTextMessageAsync(
+                     chatId: callbackQuery.Message.Chat.Id,
+                     text: "Заходит улитка в бар");
                 }
-             
             }
-
-
             if (update.Type != UpdateType.CallbackQuery)
             {
-                int ChadId = (int)Convert.ToInt64(update.Message.Chat.Id);
+                int chadIdInt = (int)Convert.ToInt64(update.Message.Chat.Id);
                 var messagetext = update.Message;
                 if (messagetext is not { } message)
                     return;
@@ -82,10 +51,9 @@ namespace CETmsgr
                     return;
                 string messagetext1 = (string)Convert.ToString(update.Message.Chat.Id);
                 var chatId = message.Chat.Id;
-                var Note = DataBaseMethods.GetNoteByTgChatId(ChadId);
+                var Note = DataBaseMethods.GetNoteByTgChatId(chadIdInt);
                 if (Note != null)
                 {
-                    
                     await DataBaseMethods.AddTextToNewNote(Note.Id, messagetext1);
                 }
                 Console.WriteLine($"Received a '{messageText}' message in chat {chatId}.");
@@ -118,13 +86,11 @@ namespace CETmsgr
               );
             }
         }
-
         public static async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
         {
             // Некоторые действия
             Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(exception));
         }
-
         static void Main(string[] args)
         {
             Console.WriteLine("Запущен бот " + bot.GetMeAsync().Result.FirstName);

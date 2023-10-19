@@ -11,12 +11,12 @@ namespace CETmsgr.MaintMethods
             var buttons = new List<List<InlineKeyboardButton>>();
             var notes = DataBaseMethods.GetAllIdNotesByOwnerIdToList(chatId);
             foreach (var note in notes)
+            {
+                buttons.Add(new List<InlineKeyboardButton>
                 {
-                    buttons.Add(new List<InlineKeyboardButton>
-                         {
-                         InlineKeyboardButton.WithCallbackData(DataBaseMethods.GetNoteTextByNoteId(note), $"SelectedNoteMenu{note}")
-                         });
-                }
+                    InlineKeyboardButton.WithCallbackData(DataBaseMethods.GetNoteTextByNoteId(note), $"SelectedNoteMenu{note}")
+                });
+            }
             buttons.Add(new List<InlineKeyboardButton>{InlineKeyboardButton.WithCallbackData("Cоздать новую заметку", "CreateEmptyNewNote")});
             var keyboard = new InlineKeyboardMarkup(buttons);
             botClient.SendTextMessageAsync(chatId, "Выберите заметку:", replyMarkup: keyboard);
@@ -26,12 +26,12 @@ namespace CETmsgr.MaintMethods
             var buttons = new List<List<InlineKeyboardButton>>
             {
                 new List<InlineKeyboardButton>
-        {
-            InlineKeyboardButton.WithCallbackData(text: "Назад",     "SelectedNoteMenuGoBack"),
-            InlineKeyboardButton.WithCallbackData(text: "Добавить", $"SelectedNoteMenuAddNew{id}"),
-            InlineKeyboardButton.WithCallbackData(text: "Изменить", $"SelectedNoteMenuChange{id}"),
-            InlineKeyboardButton.WithCallbackData(text: "Удалить",  $"SelectedNoteMenuDelete{id}")
-        }
+                {
+                    InlineKeyboardButton.WithCallbackData(text: "Назад",     "SelectedNoteGoBack"),
+                    InlineKeyboardButton.WithCallbackData(text: "Добавить", $"SelectedNoteAddNew{id}"),
+                    InlineKeyboardButton.WithCallbackData(text: "Изменить", $"SelectedNoteChange{id}"),
+                    InlineKeyboardButton.WithCallbackData(text: "Удалить",  $"SelectedNoteDelete{id}")
+                }
             };
             var keyboard = new InlineKeyboardMarkup(buttons);
             botClient.SendTextMessageAsync(chatId, DataBaseMethods.GetNoteTextByNoteId(id), replyMarkup: keyboard);
@@ -39,9 +39,9 @@ namespace CETmsgr.MaintMethods
         public static void CreateEmptyNewNoteMainProgram (ITelegramBotClient botClient, int chatId)
         {
             DataBaseMethods.CreateEmptyNewNote(chatId);
-                botClient.SendTextMessageAsync (
-                    chatId: chatId,
-                    text: "Введите текст заметки:");
+            botClient.SendTextMessageAsync (
+                chatId: chatId,
+                text: "Введите текст заметки:");
         }
        
     }

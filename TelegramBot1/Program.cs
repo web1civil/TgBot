@@ -1,11 +1,8 @@
 ﻿using Telegram.Bot;
-using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Polling;
 using CETmsgr.dbutils;
-using CETmsgr.keyboards;
 using Update = Telegram.Bot.Types.Update;
-using Telegram.Bot.Types.ReplyMarkups;
 using CETmsgr.MaintMethods;
 
 namespace CETmsgr
@@ -20,7 +17,7 @@ namespace CETmsgr
                 var callbackQuery = update.CallbackQuery;
                 int сhatId = (int)Convert.ToInt64(update.CallbackQuery.Message.Chat.Id);
                 await DataBaseMethods.AddOrCheckUser(сhatId);
-
+                //тут должа быть система
                 if (callbackQuery.Data.StartsWith("SelectedNoteMenu"))
                 {
                     string idPart = callbackQuery.Data.Substring("SelectedNoteMenu".Length);
@@ -30,7 +27,16 @@ namespace CETmsgr
                         MainProgramMethods.SendSelectedNoteMenu(botClient, id, сhatId);
                     }
                 }
-                if (callbackQuery.Data == "SelectedNoteMenuGoBack")
+                if (callbackQuery.Data.StartsWith("SelectedNoteDelete"))
+                {
+                    string idPart = callbackQuery.Data.Substring("SelectedNoteDelete".Length);
+                    int id;
+                    if (int.TryParse(idPart, out id))
+                    {
+                        DataBaseMethods.DeleteNote(id);
+                    }
+                }
+                if (callbackQuery.Data == "SelectedNoteGoBack")
                     MainProgramMethods.SendInlineNoteButtons(botClient, сhatId);
                 if (callbackQuery.Data == "CreateEmptyNewNote")
                     MainProgramMethods.CreateEmptyNewNoteMainProgram(botClient, сhatId);

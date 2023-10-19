@@ -36,22 +36,21 @@ namespace CETmsgr.dbutils
                 db.SaveChanges();
             }
         }
-        public static async Task AddTextToNote (int id, string newText)
+        public static async Task AddTextToNote (int id, string text)
         {
             using (ApplicationContext db = new ApplicationContext())
             {
                 var Note = GetNote(id);
-                Note.Text += newText;
+                Note.Text += text;
                 db.Notes.Update(Note);
                 db.SaveChanges();
             }
         }
-        public static async Task DeleteNote (int id, string newText)
+        public static async Task DeleteNote (int id)
         {
             using (ApplicationContext db = new ApplicationContext())
             {
-                var Note = GetNote(id);
-                db.Notes.Remove(Note);
+                db.Notes.Remove(GetNote(id));
                 db.SaveChanges();
             }
         }

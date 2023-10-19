@@ -1,14 +1,61 @@
-﻿
+﻿using Telegram.Bot.Types.ReplyMarkups;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-
+using System.Configuration;
 
 namespace CETmsgr.dbutils
 {
     internal class DataBaseMethods
     {
-        // метод для проверки есть ли в базе данных юзер с таким же айди и если нету то создает нового с этим айди
-        public static async Task FindOrAddUser(int id)
+        public static Note GetNote (int id)
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                var Note = db.Notes.Where(u => u.Id == id).FirstOrDefault();
+                return Note;
+            }
+        }
+        public static string  GetNoteTextByNoteId (int id)
+        { 
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                var Note = GetNote(id);
+                if (Note != null)
+                    return Note.Text;
+                else
+                    return null;
+            }
+        }
+        public static async Task SetChangeTextNote (int id,string newText)
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                var Note = GetNote(id);
+                Note.Text = newText;
+                db.Notes.Update(Note);
+                db.SaveChanges();
+            }
+        }
+        public static async Task AddTextToNote (int id, string newText)
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                var Note = GetNote(id);
+                Note.Text += newText;
+                db.Notes.Update(Note);
+                db.SaveChanges();
+            }
+        }
+        public static async Task DeleteNote (int id, string newText)
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                var Note = GetNote(id);
+                db.Notes.Remove(Note);
+                db.SaveChanges();
+            }
+        }
+        public static async Task AddOrCheckUser (int id)
         {
             using (ApplicationContext db = new ApplicationContext())
             {
@@ -21,16 +68,34 @@ namespace CETmsgr.dbutils
                 }
             }
         }
-        public static Note GetNoteByTgChatId(int id)
+        public static List<int> GetAllIdNotesByOwnerIdToList (int id)
         {
             using (ApplicationContext db = new ApplicationContext())
             {
-                var notes = db.Notes.Where(n => n.OwnerId == id).ToList();
-                if (notes.Count == 0)
-                {
+                var AllNotes = AllNotesByOwnerId(id);
+                List<int> NotesIdByOwnerId = new List<int>();
+                foreach (var u in AllNotes)
+                    NotesIdByOwnerId.Add(u.Id);
+                return NotesIdByOwnerId;
+            }
+        }
+        public static Note GetFirstNoteWithStageCreate(int id)
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                var AllNotes = AllNotesByOwnerId(id);
+                if (AllNotes.Count == 0)
                     return null;
-                }
-                return notes.FirstOrDefault(n => n.StageCreate >= 1);
+                return AllNotes.FirstOrDefault(n => n.StageCreate == 1);
+            }
+        }
+        public static List<Note> AllNotesByOwnerId (int id)
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                var AllNotesByOwnerId = db.Notes.Where(n => n.OwnerId == id).ToList();
+                
+                return AllNotesByOwnerId;
             }
         }
         public static async Task CreateEmptyNewNote(int id)
@@ -48,9 +113,11 @@ namespace CETmsgr.dbutils
             {
                 var Note = db.Notes.FirstOrDefault(n => n.Id == id);
                 Note.Text = noteText;
+                Note.StageCreate = 0;
                 db.Notes.Update(Note);
                 db.SaveChanges();
             }
         }
     }
 }
+

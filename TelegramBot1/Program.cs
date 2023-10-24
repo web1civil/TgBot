@@ -15,7 +15,7 @@ namespace CETmsgr
             if (update.Type == UpdateType.CallbackQuery)
             {
                 var callbackQuery = update.CallbackQuery;
-                int сhatId = (int)Convert.ToInt64(update.CallbackQuery.Message.Chat.Id);
+                int сhatId = Convert.ToInt32(update.CallbackQuery.Message.Chat.Id);
                 await DataBaseMethods.AddOrCheckUser(сhatId);
                 //тут должа быть система
                 if (callbackQuery.Data.StartsWith("SelectedNoteMenu"))

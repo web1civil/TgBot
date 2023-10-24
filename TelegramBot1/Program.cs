@@ -15,9 +15,9 @@ namespace CETmsgr
             if (update.Type == UpdateType.CallbackQuery)
             {
                 var callbackQuery = update.CallbackQuery;
-                int сhatId = Convert.ToInt32(update.CallbackQuery.Message.Chat.Id);
+                //папв
+                int сhatId = (int)callbackQuery.Message.Chat.Id;
                 await DataBaseMethods.AddOrCheckUser(сhatId);
-                //тут должа быть система
                 if (callbackQuery.Data.StartsWith("SelectedNoteMenu"))
                 {
                     string idPart = callbackQuery.Data.Substring("SelectedNoteMenu".Length);
@@ -48,7 +48,8 @@ namespace CETmsgr
                     return;
                 if (messagetext is not { } messageText)
                     return;
-                var chatId = (int)Convert.ToInt64(message.Chat.Id);
+
+                int chatId = (int)message.Chat.Id;
 
                 if (DataBaseMethods.GetFirstNoteWithStageCreate(chatId) != null)
                     await DataBaseMethods.AddTextToNewNote(DataBaseMethods.GetFirstNoteWithStageCreate(chatId).Id, messagetext.Text);

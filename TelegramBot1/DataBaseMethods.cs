@@ -50,11 +50,12 @@ namespace CETmsgr.dbutils
         {
             using (ApplicationContext db = new ApplicationContext())
             {
-                db.Notes.Remove(GetNote(id));
+                var Note = GetNote(id);
+                db.Notes.Remove(Note);
                 db.SaveChanges();
             }
         }
-        public static async Task AddOrCheckUser (int id)
+        public static async Task AddOrCheckUser (long id)
         {
             using (ApplicationContext db = new ApplicationContext())
             {
@@ -67,41 +68,37 @@ namespace CETmsgr.dbutils
                 }
             }
         }
-        public static List<int> GetAllIdNotesByOwnerIdToList (int id)
+        public static List<int> GetAllIdNotes (long id)
         {
             using (ApplicationContext db = new ApplicationContext())
             {
-                var AllNotes = AllNotesByOwnerId(id);
-                List<int> NotesIdByOwnerId = new List<int>();
-                foreach (var u in AllNotes)
-                    NotesIdByOwnerId.Add(u.Id);
-                return NotesIdByOwnerId;
+                List<int> NotesId = new List<int>();
+                foreach (var u in AllNotes(id))
+                    NotesId.Add(u.Id);
+                return NotesId;
             }
         }
-        public static Note GetFirstNoteWithStageCreate(int id)
+        public static Note GetFirstNoteWithStageCreate(long id)
         {
             using (ApplicationContext db = new ApplicationContext())
             {
-                var AllNotes = AllNotesByOwnerId(id);
-                if (AllNotes.Count == 0)
+                if (AllNotes(id).Count == 0)
                     return null;
-                return AllNotes.FirstOrDefault(n => n.StageCreate == 1);
+                return AllNotes(id).FirstOrDefault(n => n.StageCreate == 1);
             }
         }
-        public static List<Note> AllNotesByOwnerId (int id)
+        public static List<Note> AllNotes (long id)
         {
             using (ApplicationContext db = new ApplicationContext())
             {
-                var AllNotesByOwnerId = db.Notes.Where(n => n.OwnerId == id).ToList();
-                
-                return AllNotesByOwnerId;
+                return db.Notes.Where(n => n.TgChatId == id).ToList();
             }
         }
-        public static async Task CreateEmptyNewNote(int id)
+        public static async Task CreateEmptyNewNote(long id)
         {
             using (ApplicationContext db = new ApplicationContext())
             {
-                Note NewNote1 = new Note { OwnerId = id, StageCreate = 1 };
+                Note NewNote1 = new Note { TgChatId = id, StageCreate = 1 };
                 db.Notes.Add(NewNote1);
                 db.SaveChanges();
             }

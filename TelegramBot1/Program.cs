@@ -15,8 +15,7 @@ namespace CETmsgr
             if (update.Type == UpdateType.CallbackQuery)
             {
                 var callbackQuery = update.CallbackQuery;
-                //папв
-                int сhatId = (int)callbackQuery.Message.Chat.Id;
+                long сhatId = callbackQuery.Message.Chat.Id;
                 await DataBaseMethods.AddOrCheckUser(сhatId);
                 if (callbackQuery.Data.StartsWith("SelectedNoteMenu"))
                 {
@@ -51,8 +50,9 @@ namespace CETmsgr
 
                 int chatId = (int)message.Chat.Id;
 
-                if (DataBaseMethods.GetFirstNoteWithStageCreate(chatId) != null)
-                    await DataBaseMethods.AddTextToNewNote(DataBaseMethods.GetFirstNoteWithStageCreate(chatId).Id, messagetext.Text);
+              //  if (DataBaseMethods.GetFirstNoteWithStageCreate(chatId) != null)
+                //    await DataBaseMethods.AddTextToNewNote(DataBaseMethods.GetFirstNoteWithStageCreate(chatId).Id, messagetext.Text);
+                
                 if (messageText.Text == "/start")
                     MainProgramMethods.SendInlineNoteButtons(botClient,chatId);
             }

@@ -48,10 +48,10 @@ namespace CETmsgr
                 if (messagetext is not { } messageText)
                     return;
 
-                int chatId = (int)message.Chat.Id;
+                long chatId = update.Message.Chat.Id;
 
-              //  if (DataBaseMethods.GetFirstNoteWithStageCreate(chatId) != null)
-                //    await DataBaseMethods.AddTextToNewNote(DataBaseMethods.GetFirstNoteWithStageCreate(chatId).Id, messagetext.Text);
+               if (DataBaseMethods.GetFirstNoteWithStageCreate(chatId) != null)
+                   await DataBaseMethods.AddTextToNewNote(DataBaseMethods.GetFirstNoteWithStageCreate(chatId).Id, messagetext.Text);
                 
                 if (messageText.Text == "/start")
                     MainProgramMethods.SendInlineNoteButtons(botClient,chatId);

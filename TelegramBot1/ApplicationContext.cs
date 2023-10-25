@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 public class ApplicationContext : DbContext
 {
+
     public DbSet<Note> Notes { get; set; } = null!;
     public DbSet<User> Users { get; set; } = null!;
     public ApplicationContext ()

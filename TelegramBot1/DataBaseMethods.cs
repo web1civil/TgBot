@@ -91,14 +91,14 @@ namespace CETmsgr.dbutils
         {
             using (ApplicationContext db = new ApplicationContext())
             {
-                return db.Notes.Where(n => n.TgChatId == id).ToList();
+                return db.Notes.Where(n => n.ChatId == id).ToList();
             }
         }
         public static async Task CreateEmptyNewNote(long id)
         {
             using (ApplicationContext db = new ApplicationContext())
             {
-                Note NewNote1 = new Note { TgChatId = id, StageCreate = 1 };
+                Note NewNote1 = new Note { ChatId = id, StageCreate = 1 };
                 db.Notes.Add(NewNote1);
                 db.SaveChanges();
             }

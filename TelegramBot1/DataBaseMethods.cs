@@ -11,7 +11,7 @@ namespace CETmsgr.dbutils
         {
             using (ApplicationContext db = new ApplicationContext())
             {
-                var Note = db.Notes.Where(u => u.Id == id).FirstOrDefault();
+                var Note = db.Notes.Where(u => u.UserId == id).FirstOrDefault();
                 return Note;
             }
         }
@@ -23,7 +23,7 @@ namespace CETmsgr.dbutils
                 if (Note != null)
                     return Note.Text;
                 else
-                    return null;
+                    return "текста нет" ;
             }
         }
         public static async Task SetChangeTextNote (int id,string newText)
@@ -59,10 +59,10 @@ namespace CETmsgr.dbutils
         {
             using (ApplicationContext db = new ApplicationContext())
             {
-                var user = db.Users.Where(u => u.TgChatId == id).FirstOrDefault();
+                var user = db.Users.Where(u => u.Id == id).FirstOrDefault();
                 if (user == null)
                 {
-                    user = new User { TgChatId = id };
+                    user = new User { Id = id };
                     db.Users.Add(user);
                     db.SaveChanges();
                 }
@@ -91,14 +91,14 @@ namespace CETmsgr.dbutils
         {
             using (ApplicationContext db = new ApplicationContext())
             {
-                return db.Notes.Where(n => n.ChatId == id).ToList();
+                return db.Notes.Where(n => n.UserId == id).ToList();
             }
         }
         public static async Task CreateEmptyNewNote(long id)
         {
             using (ApplicationContext db = new ApplicationContext())
             {
-                Note NewNote1 = new Note { ChatId = id, StageCreate = 1 };
+                Note NewNote1 = new Note { UserId = id, StageCreate = 1 };
                 db.Notes.Add(NewNote1);
                 db.SaveChanges();
             }

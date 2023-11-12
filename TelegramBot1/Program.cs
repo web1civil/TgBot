@@ -16,14 +16,16 @@ namespace CETmsgr
             {
                 var callbackQuery = update.CallbackQuery;
                 long сhatId = callbackQuery.Message.Chat.Id;
-                await DataBaseMethods.AddOrCheckUser(сhatId);
+                DataBaseMethods dataBaseMethods = new DataBaseMethods();
+                MainProgramMethods mainProgramMethods = new MainProgramMethods();
+                await dataBaseMethods.AddOrCheckUser(сhatId);
                 if (callbackQuery.Data.StartsWith("SelectedNoteMenu"))
                 {
                     string idPart = callbackQuery.Data.Substring("SelectedNoteMenu".Length);
                     int id;
                     if (int.TryParse(idPart, out id))
                     {
-                        MainProgramMethods.SendSelectedNoteMenu(botClient, id, сhatId);
+                        mainProgramMethods.SendSelectedNoteMenu(botClient, id, сhatId);
                     }
                 }
                 if (callbackQuery.Data.StartsWith("SelectedNoteDelete"))
@@ -32,13 +34,13 @@ namespace CETmsgr
                     int id;
                     if (int.TryParse(idPart, out id))
                     {
-                        DataBaseMethods.DeleteNote(id);
+                        dataBaseMethods.DeleteNote(id);
                     }
                 }
                 if (callbackQuery.Data == "SelectedNoteGoBack")
-                    MainProgramMethods.SendInlineNoteButtons(botClient, сhatId);
+                    mainProgramMethods.SendInlineNoteButtons(botClient, сhatId);
                 if (callbackQuery.Data == "CreateEmptyNewNote")
-                    MainProgramMethods.CreateEmptyNewNoteMainProgram(botClient, сhatId);
+                    mainProgramMethods.CreateEmptyNewNoteMainProgram(botClient, сhatId);
             }
             if (update.Type != UpdateType.CallbackQuery)
             {
@@ -47,14 +49,15 @@ namespace CETmsgr
                     return;
                 if (messagetext is not { } messageText)
                     return;
-
+                MainProgramMethods mainProgramMethods = new MainProgramMethods();
+                DataBaseMethods dataBaseMethods = new DataBaseMethods();
                 long chatId = update.Message.Chat.Id;
 
-               if (DataBaseMethods.GetFirstNoteWithStageCreate(chatId) != null)
-                   await DataBaseMethods.AddTextToNewNote(DataBaseMethods.GetFirstNoteWithStageCreate(chatId).Id, messagetext.Text);
+               if (dataBaseMethods.GetFirstNoteWithStageCreate(chatId) != null)
+                   await dataBaseMethods.AddTextToNewNote(dataBaseMethods.GetFirstNoteWithStageCreate(chatId).Id, messagetext.Text);
                 
                 if (messageText.Text == "/start")
-                    MainProgramMethods.SendInlineNoteButtons(botClient,chatId);
+                    mainProgramMethods.SendInlineNoteButtons(botClient,chatId);
             }
         }
         public static async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)

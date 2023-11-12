@@ -5,23 +5,26 @@ namespace CETmsgr.MaintMethods
 {
     internal class MainProgramMethods
     {
+
+        DataBaseMethods dataBaseMethods = new DataBaseMethods();
         //думаю тут много неправильно, хз как с кейбоярдами работать и плохие наименования
-        public static void SendInlineNoteButtons (ITelegramBotClient botClient, long chatId)
+        public void SendInlineNoteButtons (ITelegramBotClient botClient, long chatId)
         {
             var buttons = new List<List<InlineKeyboardButton>>();
-            var notes = DataBaseMethods.GetAllIdNotes(chatId);
+
+            var notes = dataBaseMethods.GetAllIdNotes(chatId);
             foreach (var note in notes)
             {
                 buttons.Add(new List<InlineKeyboardButton>
                 {
-                    InlineKeyboardButton.WithCallbackData(DataBaseMethods.GetNoteTextByNoteId(note), $"SelectedNoteMenu{note}")
+                    InlineKeyboardButton.WithCallbackData(dataBaseMethods.GetNoteTextByNoteId(note), $"SelectedNoteMenu{note}")
                 });
             }
             buttons.Add(new List<InlineKeyboardButton>{InlineKeyboardButton.WithCallbackData("Cоздать новую заметку", "CreateEmptyNewNote")});
             var keyboard = new InlineKeyboardMarkup(buttons);
             botClient.SendTextMessageAsync(chatId, "Выберите заметку:", replyMarkup: keyboard);
         }
-        public static void SendSelectedNoteMenu (ITelegramBotClient botClient, int id, long chatId)
+        public void SendSelectedNoteMenu (ITelegramBotClient botClient, int id, long chatId)
         {
             var buttons = new List<List<InlineKeyboardButton>>
             {
@@ -34,11 +37,11 @@ namespace CETmsgr.MaintMethods
                 }
             };
             var keyboard = new InlineKeyboardMarkup(buttons);
-            botClient.SendTextMessageAsync(chatId, DataBaseMethods.GetNoteTextByNoteId(id), replyMarkup: keyboard);
+            botClient.SendTextMessageAsync(chatId, dataBaseMethods.GetNoteTextByNoteId(id), replyMarkup: keyboard);
         }
-        public static void CreateEmptyNewNoteMainProgram (ITelegramBotClient botClient, long chatId)
+        public void CreateEmptyNewNoteMainProgram (ITelegramBotClient botClient, long chatId)
         {
-            DataBaseMethods.CreateEmptyNewNote(chatId);
+            dataBaseMethods.CreateEmptyNewNote(chatId);
             botClient.SendTextMessageAsync (
                 chatId: chatId,
                 text: "Введите текст заметки:");

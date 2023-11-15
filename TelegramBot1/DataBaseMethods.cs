@@ -15,20 +15,18 @@ namespace CETmsgr.dbutils
         public string GetNoteTextByNoteId(int noteId)
         {
             var note = GetNote(noteId);     
-            return (note != null) ? note.Text : "текста нет";
+            return note != null ? note.Text : "текста нет";
         }
         public void SetChangeTextNote(int noteId, string newText)
         {
             var note = GetNote(noteId);
             note.Text = newText;
-            db.Notes.Update(note);
             db.SaveChanges();
         }
         public void AddTextToNote(int noteId, string text)
         {
             var note = GetNote(noteId);
             note.Text += text;
-            db.Notes.Update(note);
             db.SaveChanges();
         }
         public void DeleteNote(int noteId)
@@ -49,16 +47,14 @@ namespace CETmsgr.dbutils
         }
         public List<int> GetAllIdNotes(long userId)
         {
-            List<int> notesId = new List<int>();
+            var notesId = new List<int>();
             foreach (var u in AllNotes(userId))
                 notesId.Add(u.Id);
             return notesId;
         }
         public Note GetFirstNoteWithStageCreate(long userId)
         {
-            if (AllNotes(userId).Count == 0)
-                return null;
-            return AllNotes(userId).FirstOrDefault(n => n.StageCreate == 1);
+            return (AllNotes(userId).Count == 0) ? null : AllNotes(userId).FirstOrDefault(n => n.StageCreate == 1);
         }
         public List<Note> AllNotes(long userId)
         {
@@ -75,7 +71,6 @@ namespace CETmsgr.dbutils
             var note = db.Notes.FirstOrDefault(n => n.Id == noteId);
             note.Text = noteText;
             note.StageCreate = 0;
-            db.Notes.Update(note);
             db.SaveChanges();
         }
     }

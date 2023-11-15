@@ -8,78 +8,69 @@ namespace CETmsgr.dbutils
     internal class DataBaseMethods
     {
         ApplicationContext db = new ApplicationContext();
-        public Note GetNote(int id)
+        public Note GetNote(int noteId)
         {
-            var Note = db.Notes.Where(u => u.UserId == id).FirstOrDefault();
-            return Note;
+            return db.Notes.Where(u => u.Id == noteId).FirstOrDefault();
         }
-        public string GetNoteTextByNoteId(int id)
+        public string GetNoteTextByNoteId(int noteId)
         {
-            var Note = GetNote(id);
-            if (Note != null)
-                return Note.Text;
-            else
-                return "текста нет";
+            var note = GetNote(noteId);     
+            return note != null ? note.Text : "текста нет";
         }
-        public async Task SetChangeTextNote(int id, string newText)
+        public void SetChangeTextNote(int noteId, string newText)
         {
-            var Note = GetNote(id);
-            Note.Text = newText;
-            db.Notes.Update(Note);
+            var note = GetNote(noteId);
+            note.Text = newText;
             db.SaveChanges();
         }
-        public async Task AddTextToNote(int id, string text)
+        public void AddTextToNote(int noteId, string text)
         {
-            var Note = GetNote(id);
-            Note.Text += text;
-            db.Notes.Update(Note);
+            var note = GetNote(noteId);
+            note.Text += text;
             db.SaveChanges();
         }
-        public async Task DeleteNote(int id)
+        public void DeleteNote(int noteId)
         {
-            var Note = GetNote(id);
-            db.Notes.Remove(Note);
+            var note = GetNote(noteId);
+            db.Notes.Remove(note);
             db.SaveChanges();
         }
-        public async Task AddOrCheckUser(long id)
+        public void AddOrCheckUser(long userId)
         {
-            var user = db.Users.Where(u => u.Id == id).FirstOrDefault();
+            var user = db.Users.Where(u => u.Id == userId).FirstOrDefault();
             if (user == null)
             {
-                user = new User { Id = id };
+                user = new User { Id = userId };
                 db.Users.Add(user);
                 db.SaveChanges();
             }
         }
-        public List<int> GetAllIdNotes(long id)
+        public List<int> GetAllIdNotes(long userId)
         {
-            List<int> NotesId = new List<int>();
-            foreach (var u in AllNotes(id))
-                NotesId.Add(u.Id);
-            return NotesId;
+            var notesId = new List<int>();
+            foreach (var u in AllNotes(userId))
+                notesId.Add(u.Id);
+            return notesId;
         }
-        public Note GetFirstNoteWithStageCreate(long id)
+        public Note GetFirstNoteWithStageCreate(long userId)
         {
-            if (AllNotes(id).Count == 0)
-                return null;
-            return AllNotes(id).FirstOrDefault(n => n.StageCreate == 1);
+            return (AllNotes(userId).Count == 0) ? null : AllNotes(userId).FirstOrDefault(n => n.StageCreate == 1);
         }
-        public List<Note> AllNotes(long id)
+        public List<Note> AllNotes(long userId)
         {
-            return db.Notes.Where(n => n.UserId == id).ToList();
+            return db.Notes.Where(n => n.UserId == userId).ToList();
         }
-        public async Task CreateEmptyNewNote(long id)
+        public void CreateEmptyNewNote(long userId)
         {
-            Note NewNote1 = new Note { UserId = id, StageCreate = 1 };
-            db.Notes.Add(NewNote1);
+            Note newNote = new Note { UserId = userId, StageCreate = 1 };
+            db.Notes.Add(newNote);
             db.SaveChanges();
         }
-        public async Task AddTextToNewNote(int id, string noteText)
+        public void AddTextToNewNote(int noteId, string noteText)
         {
-            var Note = db.Notes.FirstOrDefault(n => n.Id == id);
-            Note.Text = noteText;
-            Note.StageCreate = 0;
-            db.Notes.Update(Note);
+            var note = db.Notes.FirstOrDefault(n => n.Id == noteId);
+            note.Text = noteText;
+            note.StageCreate = 0;
             db.SaveChanges();
         }
     }

@@ -18,23 +18,23 @@ namespace CETmsgr
                 long сhatId = callbackQuery.Message.Chat.Id;
                 DataBaseMethods dataBaseMethods = new DataBaseMethods();
                 MainProgramMethods mainProgramMethods = new MainProgramMethods();
-                await dataBaseMethods.AddOrCheckUser(сhatId);
+                dataBaseMethods.AddOrCheckUser(сhatId);
                 if (callbackQuery.Data.StartsWith("SelectedNoteMenu"))
                 {
                     string idPart = callbackQuery.Data.Substring("SelectedNoteMenu".Length);
-                    int id;
-                    if (int.TryParse(idPart, out id))
+                    int noteId;
+                    if (int.TryParse(idPart, out noteId))
                     {
-                        mainProgramMethods.SendSelectedNoteMenu(botClient, id, сhatId);
+                        mainProgramMethods.SendSelectedNoteMenu(botClient, noteId, сhatId);
                     }
                 }
                 if (callbackQuery.Data.StartsWith("SelectedNoteDelete"))
                 {
                     string idPart = callbackQuery.Data.Substring("SelectedNoteDelete".Length);
-                    int id;
-                    if (int.TryParse(idPart, out id))
+                    int noteId;
+                    if (int.TryParse(idPart, out noteId))
                     {
-                        dataBaseMethods.DeleteNote(id);
+                        dataBaseMethods.DeleteNote(noteId);
                     }
                 }
                 if (callbackQuery.Data == "SelectedNoteGoBack")
@@ -54,7 +54,7 @@ namespace CETmsgr
                 long chatId = update.Message.Chat.Id;
 
                if (dataBaseMethods.GetFirstNoteWithStageCreate(chatId) != null)
-                   await dataBaseMethods.AddTextToNewNote(dataBaseMethods.GetFirstNoteWithStageCreate(chatId).Id, messagetext.Text);
+                     dataBaseMethods.AddTextToNewNote(dataBaseMethods.GetFirstNoteWithStageCreate(chatId).Id, messagetext.Text);
                 
                 if (messageText.Text == "/start")
                     mainProgramMethods.SendInlineNoteButtons(botClient,chatId);

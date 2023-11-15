@@ -7,7 +7,6 @@ namespace CETmsgr.MaintMethods
     {
 
         DataBaseMethods dataBaseMethods = new DataBaseMethods();
-        //думаю тут много неправильно, хз как с кейбоярдами работать и плохие наименования
         public void SendInlineNoteButtons (ITelegramBotClient botClient, long chatId)
         {
             var buttons = new List<List<InlineKeyboardButton>>();
@@ -24,20 +23,20 @@ namespace CETmsgr.MaintMethods
             var keyboard = new InlineKeyboardMarkup(buttons);
             botClient.SendTextMessageAsync(chatId, "Выберите заметку:", replyMarkup: keyboard);
         }
-        public void SendSelectedNoteMenu (ITelegramBotClient botClient, int id, long chatId)
+        public void SendSelectedNoteMenu (ITelegramBotClient botClient, int noteId, long chatId)
         {
             var buttons = new List<List<InlineKeyboardButton>>
             {
                 new List<InlineKeyboardButton>
                 {
                     InlineKeyboardButton.WithCallbackData(text: "Назад",     "SelectedNoteGoBack"),
-                    InlineKeyboardButton.WithCallbackData(text: "Добавить", $"SelectedNoteAddNew{id}"),
-                    InlineKeyboardButton.WithCallbackData(text: "Изменить", $"SelectedNoteChange{id}"),
-                    InlineKeyboardButton.WithCallbackData(text: "Удалить",  $"SelectedNoteDelete{id}")
+                    InlineKeyboardButton.WithCallbackData(text: "Добавить", $"SelectedNoteAddNew{noteId}"),
+                    InlineKeyboardButton.WithCallbackData(text: "Изменить", $"SelectedNoteChange{noteId}"),
+                    InlineKeyboardButton.WithCallbackData(text: "Удалить",  $"SelectedNoteDelete{noteId}")
                 }
             };
             var keyboard = new InlineKeyboardMarkup(buttons);
-            botClient.SendTextMessageAsync(chatId, dataBaseMethods.GetNoteTextByNoteId(id), replyMarkup: keyboard);
+            botClient.SendTextMessageAsync(chatId, dataBaseMethods.GetNoteTextByNoteId(noteId), replyMarkup: keyboard);
         }
         public void CreateEmptyNewNoteMainProgram (ITelegramBotClient botClient, long chatId)
         {
